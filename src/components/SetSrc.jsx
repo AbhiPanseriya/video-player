@@ -59,7 +59,7 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) =
                 >
                     <FileUploadIcon />
                     <span className='mt-2 text-base leading-normal'>Select a file</span>
-                    <input type='file' className='hidden' onChange={onSelectFile} />
+                    <input type='file' accept='.MP4, .MKV, .WEBM, .OGG, .MP3, .H.264' className='hidden' onChange={onSelectFile} />
                 </label>
                 <div className='flex my-5 items-center'>
                     <span className='w-full sm:w-44 border-b'></span>
