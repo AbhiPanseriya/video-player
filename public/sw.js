@@ -1,9 +1,7 @@
 const CACHE_NAME = 'avplayer_cache';
 const urlsToCache = [
     '/',
-    '/static/js/bundle.js',
-    '/static/js/vendors~main.chunk.js',
-    '/static/js/main.chunk.js',
+    '/static',
     '/logo-blue.svg',
     'manifest.json'
 ];
