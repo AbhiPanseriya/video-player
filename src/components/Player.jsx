@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import PlayerControl from './PlayerControl'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+import DisplaySubtitle from './DisplaySubtitle'
 
 const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
     const [playing, setPlaying] = useState(true);
@@ -11,6 +12,8 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
     const [played, setPlayed] = useState(0);
     const [pip, setPip] = useState(false);
     const [isControlsHidden, setIsControlsHidden] = useState(true);
+    const [subtitle, setSubtitle] = useState('');
+    const [subtitleOffset, setSubtitleOffset] = useState(0);
 
     const playerRef = useRef(null);
 
@@ -21,8 +24,21 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
 
         setIsControlsHidden(false);
         setTimeout(() => {
-            setIsControlsHidden(true);
-        }, 10000);
+            if (playing)
+                setIsControlsHidden(true);
+        }, 5000);
+    }
+
+    const togglePlaying = (value) => {
+        setPlaying(value);
+        if (!value) {
+            setIsControlsHidden(false);
+        }
+        else {
+            setTimeout(() => {
+                setIsControlsHidden(true);
+            }, 5000);
+        }
     }
 
     useEffect(() => {
@@ -30,7 +46,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
             switch (e.code) {
                 case 'Space':
                 case 'KeyK':
-                    setPlaying(!playing);
+                    togglePlaying(!playing);
                     break;
                 case 'KeyJ':
                 case 'ArrowLeft':
@@ -92,29 +108,32 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
 
     return (
         <FullScreen handle={fullScreenHandle}>
-            <div className={`bg-black w-screen h-screen relative ${isControlsHidden ? 'cursor-none' : 'cursor-auto'}`} onMouseMove={handleMouseMove}>
-                <ReactPlayer
-                    ref={playerRef}
-                    className='object-contain'
-                    url={src}
-                    width='100%'
-                    height='100%'
-                    controls={!isLocalFile}
-                    pip={pip}
-                    stopOnUnmount={false}
-                    playing={playing}
-                    muted={muted}
-                    volume={volume / 100}
-                    playbackRate={playbackRate}
-                    onEnded={e => setIsPlayerVisible(false)}
-                    onProgress={(e) => { setPlayed(e.playedSeconds); }}
-                />
+            <div className={`relative bg-black ${isControlsHidden ? 'cursor-none' : 'cursor-auto'}`} onMouseMove={handleMouseMove}>
+                <div className={`w-screen h-screen ${isControlsHidden ? '' : 'opacity-75'}`}>
+                    <ReactPlayer
+                        ref={playerRef}
+                        className='object-contain'
+                        url={src}
+                        width='100%'
+                        height='100%'
+                        controls={!isLocalFile}
+                        pip={pip}
+                        stopOnUnmount={false}
+                        playing={playing}
+                        muted={muted}
+                        volume={volume / 100}
+                        playbackRate={playbackRate}
+                        onEnded={e => setIsPlayerVisible(false)}
+                        onProgress={(e) => { setPlayed(e.playedSeconds); }}
+                        onDisablePIP={() => setPip(false)}
+                    />
+                </div>
                 {isLocalFile &&
                     <PlayerControl
                         isControlsHidden={isControlsHidden}
                         title={title}
                         playing={playing}
-                        togglePlaying={setPlaying}
+                    togglePlaying={togglePlaying}
                         setIsPlayerVisible={setIsPlayerVisible}
                         seekTo={(amount) => {
                             playerRef.current.seekTo(playerRef.current.getCurrentTime() + amount, 'seconds');
@@ -131,8 +150,18 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                     totalDuration={playerRef?.current?.getDuration() || 0}
                     pip={pip}
                     setPip={setPip}
+                    subtitle={subtitle}
+                    setSubtitle={setSubtitle}
+                    subtitleOffset={subtitleOffset}
+                    setSubtitleOffset={setSubtitleOffset}
                 />
                 }
+                <DisplaySubtitle
+                    played={played}
+                    subtitleText={subtitle}
+                    subtitleOffset={subtitleOffset}
+                    isControlsHidden={isControlsHidden}
+                />
             </div>
         </FullScreen>
     )

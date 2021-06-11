@@ -34,7 +34,7 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) =
 
     return (
         <div className={dark ? 'dark' : ''}>
-            <div className='w-screen h-screen flex flex-col justify-center items-center relative dark:bg-gray-900' >
+            <div className='w-screen h-screen flex flex-col justify-center items-center relative dark:bg-gray-900 transition-all duration-500' >
                 <button className='absolute top-5 right-5 focus:outline-none'>
                     {dark
                         ? (
@@ -55,7 +55,8 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) =
                 <label
                     className='w-10/12 sm:w-96 flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-md tracking-wide 
                     uppercase border cursor-pointer hover:bg-blue-400 hover:text-white 
-                    dark:text-white dark:bg-gray-700 dark:border-black dark:hover:bg-blue-400 dark:shadow-none'
+                    dark:text-white dark:bg-gray-700 dark:border-black dark:hover:bg-blue-400 dark:shadow-none
+                    transition-all hover:duration-150 duration-500'
                 >
                     <FileUploadIcon />
                     <span className='mt-2 text-base leading-normal'>Select a file</span>
@@ -69,7 +70,8 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) =
                 <form onSubmit={onSelectLink} className='w-10/12 sm:w-96'>
                     <input
                         type='text'
-                        className='outline-none shadow-md p-3 w-full border rounded-lg dark:bg-gray-700 dark:border-black dark:text-white'
+                        className='outline-none shadow-md p-3 w-full border rounded-lg dark:bg-gray-700 dark:border-black dark:text-white 
+                        transition-all duration-500'
                         placeholder='Paste your Link Here'
                         onChange={(e) => setSrc(e.target.value)}
                         value={src}

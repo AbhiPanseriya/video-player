@@ -10,13 +10,18 @@ import {
     faVolumeDown,
     faVolumeOff,
     faExpand,
-    faClone
+    faClone,
+    faClosedCaptioning,
+    faPlus,
+    faMinus
 } from '@fortawesome/free-solid-svg-icons'
+import FileUploadIcon from "./file-upload-svg-icon";
 import { Slider } from '@material-ui/core';
 import Popover from '@material-ui/core/Popover';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
+import { parseSync } from 'subtitle';
 
 const ValueLabelComponent = (props) => {
     const { children, open, value } = props;
@@ -58,10 +63,15 @@ const PlayerControl = ({
     setPlayed,
     totalDuration,
     pip,
-    setPip
+    setPip,
+    subtitle,
+    setSubtitle,
+    subtitleOffset,
+    setSubtitleOffset,
 
 }) => {
     const [playbackRateOptionEl, setPlaybackRateOptionEl] = useState(null);
+    const [subtitleEl, setSubtitleEl] = useState(null);
 
     const onPlaybackRateChange = (event) => {
         setPlaybackRateOptionEl(event.currentTarget);
@@ -71,6 +81,22 @@ const PlayerControl = ({
     };
     const plabackRateOptionsOpen = Boolean(playbackRateOptionEl);
     const playbackRateId = plabackRateOptionsOpen ? 'simple-popover' : undefined;
+
+    const onSelectFile = (e) => {
+        const fileReader = new FileReader()
+        fileReader.readAsText(e.target.files[0]);
+        fileReader.onload = function (ev) {
+            const result = ev.target.result;
+            const file = parseSync(result);
+            setSubtitle(JSON.stringify(file));
+            setSubtitleEl(null);
+        }
+    }
+
+    const subtitlePopoverOpen = Boolean(subtitleEl);
+    const subtitlePopoverId = subtitlePopoverOpen ? 'subtitle-popover' : undefined;
+
+
 
     return (
         <div className={`absolute top-0 z-10 w-[100%] h-[100%] text-white p-2 flex flex-col justify-between ${isControlsHidden ? 'hidden' : 'visible'}`} >
@@ -176,6 +202,54 @@ const PlayerControl = ({
                         <div className='ml-4'>{`${convertTimeString(played) || ''}/${convertTimeString(totalDuration) || ''}`}</div>
                     </div>
                     <div className='flex items-center'>
+                        <div
+                            className='mr-4 cursor-pointer'
+                            aria-describedby={subtitlePopoverId}
+                            onClick={event => setSubtitleEl(event.currentTarget)}
+                        >
+                            <FontAwesomeIcon icon={faClosedCaptioning} className='cursor-pointer' />
+                        </div>
+                        <Popover
+                            id={subtitlePopoverId}
+                            open={subtitlePopoverOpen}
+                            anchorEl={subtitleEl}
+                            onClose={() => setSubtitleEl(null)}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <form className='bg-gray-900 flex flex-col text-white py-2'>
+                                <label
+                                    className='w-30 flex flex-col items-center border-black shadow-md tracking-wide p-2
+                                    uppercase cursor-pointer hover:bg-gray-700'
+                                >
+                                    <FileUploadIcon />
+                                    <span className='mt-2 text-sm leading-normal'>Select a file</span>
+                                    <input type='file' accept='.SRT, .VTT' className='hidden' onChange={onSelectFile} />
+                                </label>
+                                {subtitle &&
+                                    <div className='mt-4 w-full flex justify-between items-center text-2xl px-2'>
+                                        <FontAwesomeIcon
+                                            icon={faMinus}
+                                            className='cursor-pointer p-1 rounded-full hover:bg-gray-700'
+                                            onClick={e => setSubtitleOffset(subtitleOffset - 0.1)}
+                                        />
+                                        {subtitleOffset.toFixed(1)}s
+                                        <FontAwesomeIcon
+                                            icon={faPlus}
+                                            className='cursor-pointer p-1 rounded-full hover:bg-gray-700'
+                                            onClick={e => setSubtitleOffset(subtitleOffset + 0.1)}
+                                        />
+                                    </div>
+                                }
+                            </form>
+                        </Popover>
+
                         <div className='mr-4 cursor-pointer' aria-describedby={playbackRateId} onClick={onPlaybackRateChange}>{playbackRate}x</div>
                         <Popover
                             id={playbackRateId}
@@ -210,13 +284,7 @@ const PlayerControl = ({
                         <FontAwesomeIcon
                             icon={faClone}
                             className='cursor-pointer mr-4'
-                            onClick={() => {
-                                if (pip)
-                                    setPip(false)
-                                setTimeout(() => {
-                                    setPip(true)
-                                }, 10);
-                            }}
+                            onClick={() => setPip(true)}
                         />
                         <FontAwesomeIcon
                             icon={faExpand}
