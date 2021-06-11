@@ -8,7 +8,7 @@ const buildUrls = [
     '/static/js/2.4854944b.chunk.js',
     '/static/js/main.217d6fee.chunk.js',
     '/static/css/main.97481301.chunk.css',
-    '/static/js/untime-main.19af7ed0.js'
+    '/static/js/runtime-main.19af7ed0.js'
 ]
 self.addEventListener('install', function (event) {
     event.waitUntil(
