@@ -44,7 +44,7 @@ const Player = ({ src, title, isLocalFile, currentlyPlaying, setCurrentlyPlaying
     }
 
     useEffect(() => {
-        setPlaying(true);
+        togglePlaying(true);
         handleMouseMove();
     }, [src]);
 
