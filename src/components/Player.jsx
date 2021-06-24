@@ -3,8 +3,9 @@ import ReactPlayer from 'react-player'
 import PlayerControl from './PlayerControl'
 import { FullScreen, useFullScreenHandle } from 'react-full-screen'
 import DisplaySubtitle from './DisplaySubtitle'
+import FilesList from './FilesList';
 
-const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
+const Player = ({ src, title, isLocalFile, currentlyPlaying, setCurrentlyPlaying, setIsPlayerVisible, filesList }) => {
     const [playing, setPlaying] = useState(true);
     const [muted, setMuted] = useState(JSON.parse(localStorage.getItem('muted')) || false);
     const [volume, setVolume] = useState(JSON.parse(localStorage.getItem('vol')) || 50);
@@ -14,6 +15,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
     const [isControlsHidden, setIsControlsHidden] = useState(true);
     const [subtitle, setSubtitle] = useState('');
     const [subtitleOffset, setSubtitleOffset] = useState(0);
+    const [fileNames, setFileNames] = useState([]);
 
     const playerRef = useRef(null);
 
@@ -26,7 +28,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
         setTimeout(() => {
             if (playing)
                 setIsControlsHidden(true);
-        }, 5000);
+        }, 8000);
     }
 
     const togglePlaying = (value) => {
@@ -40,6 +42,11 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
             }, 5000);
         }
     }
+
+    useEffect(() => {
+        setPlaying(true);
+        handleMouseMove();
+    }, [src]);
 
     useEffect(() => {
         const cb = (e) => {
@@ -67,6 +74,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                     fullScreenHandle.active ? fullScreenHandle.exit() : fullScreenHandle.enter()
                     break;
                 case 'Equal':
+                    if (volume + 3 > 100) break;
                     setVolume(volume + 3);
                     localStorage.setItem('vol', volume + 3);
                     if (volume + 3 === 0) {
@@ -78,6 +86,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                     }
                     break;
                 case 'Minus':
+                    if (volume - 2 < 0) break;
                     setVolume(volume - 2);
                     localStorage.setItem('vol', volume - 2);
                     if (volume - 2 === 0) {
@@ -106,6 +115,14 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
         return () => window.removeEventListener('keyup', cb);
     }, [pip, playing, fullScreenHandle, volume, muted])
 
+    useEffect(() => {
+        const fileNames = [];
+        for (let index = 0; index < filesList.length; index++) {
+            fileNames.push(filesList[index].name);
+        }
+        setFileNames(fileNames);
+    }, [filesList]);
+
     return (
         <FullScreen handle={fullScreenHandle}>
             <div className={`relative bg-black ${isControlsHidden ? 'cursor-none' : 'cursor-auto'}`} onMouseMove={handleMouseMove}>
@@ -123,9 +140,10 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                         muted={muted}
                         volume={volume / 100}
                         playbackRate={playbackRate}
-                        onEnded={e => setIsPlayerVisible(false)}
+                        onEnded={() => setCurrentlyPlaying(currentlyPlaying + 1)}
                         onProgress={(e) => { setPlayed(e.playedSeconds); }}
                         onDisablePIP={() => setPip(false)}
+                        onPause={() => setPlaying(false)}
                     />
                 </div>
                 {isLocalFile &&
@@ -134,7 +152,7 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                         title={title}
                         playing={playing}
                     togglePlaying={togglePlaying}
-                        setIsPlayerVisible={setIsPlayerVisible}
+                    setIsPlayerVisible={setIsPlayerVisible}
                         seekTo={(amount) => {
                             playerRef.current.seekTo(playerRef.current.getCurrentTime() + amount, 'seconds');
                         }}
@@ -160,6 +178,12 @@ const Player = ({ src, setIsPlayerVisible, title, isLocalFile }) => {
                     played={played}
                     subtitleText={subtitle}
                     subtitleOffset={subtitleOffset}
+                    isControlsHidden={isControlsHidden}
+                />
+                <FilesList
+                    fileNames={fileNames}
+                    currentlyPlaying={currentlyPlaying}
+                    setCurrentlyPlaying={setCurrentlyPlaying}
                     isControlsHidden={isControlsHidden}
                 />
             </div>

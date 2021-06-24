@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
-const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) => {
-    const [dark, setDark] = useState(JSON.parse(localStorage.getItem('dark')) || false)
+const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, setIsMultiple, setFilesList }) => {
+    const [dark, setDark] = useState(JSON.parse(localStorage.getItem('dark')) || false);
 
     const onSelectFile = (e) => {
+        if (e.target.files.length > 1) setIsMultiple(true);
+        setFilesList(e.target.files);
         const file = e.target.files[0];
         setTitle(file.name);
         const URL = window.URL || window.webkitURL;
@@ -59,8 +61,8 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile }) =
                     transition-all hover:duration-150 duration-500'
                 >
                     <FileUploadIcon />
-                    <span className='mt-2 text-base leading-normal'>Select a file</span>
-                    <input type='file' accept='.MP4, .MKV, .WEBM, .OGG, .MP3, .H.264' className='hidden' onChange={onSelectFile} />
+                    <span className='mt-2 text-base leading-normal'>Select files</span>
+                    <input type='file' accept='.MP4, .MKV, .WEBM, .OGG, .MP3, .H.264' multiple className='hidden' onChange={onSelectFile} />
                 </label>
                 <div className='flex my-5 items-center'>
                     <span className='w-full sm:w-44 border-b'></span>

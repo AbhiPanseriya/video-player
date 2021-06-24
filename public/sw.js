@@ -5,9 +5,9 @@ const urlsToCache = [
     'manifest.json'
 ];
 const buildUrls = [
-    '/static/js/2.4854944b.chunk.js',
-    '/static/js/main.217d6fee.chunk.js',
-    '/static/css/main.97481301.chunk.css',
+    '/static/js/2.09461033.chunk.js',
+    '/static/js/main.de383b9f.chunk.js',
+    '/static/css/main.26a6666b.chunk.css',
     '/static/js/runtime-main.19af7ed0.js'
 ]
 self.addEventListener('install', function (event) {

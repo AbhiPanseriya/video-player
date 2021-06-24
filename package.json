@@ -17,6 +17,7 @@
     "react-player": "^2.9.0",
     "react-scripts": "4.0.3",
     "subtitle": "^4.1.0",
+    "tailwind-scrollbar-hide": "^1.0.3",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

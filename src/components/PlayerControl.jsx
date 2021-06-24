@@ -13,7 +13,8 @@ import {
     faClone,
     faClosedCaptioning,
     faPlus,
-    faMinus
+    faMinus,
+    faTrash
 } from '@fortawesome/free-solid-svg-icons'
 import FileUploadIcon from "./file-upload-svg-icon";
 import { Slider } from '@material-ui/core';
@@ -22,6 +23,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import { parseSync } from 'subtitle';
+import { useEffect } from 'react';
 
 const ValueLabelComponent = (props) => {
     const { children, open, value } = props;
@@ -67,7 +69,7 @@ const PlayerControl = ({
     subtitle,
     setSubtitle,
     subtitleOffset,
-    setSubtitleOffset,
+    setSubtitleOffset
 
 }) => {
     const [playbackRateOptionEl, setPlaybackRateOptionEl] = useState(null);
@@ -96,20 +98,29 @@ const PlayerControl = ({
     const subtitlePopoverOpen = Boolean(subtitleEl);
     const subtitlePopoverId = subtitlePopoverOpen ? 'subtitle-popover' : undefined;
 
+    useEffect(() => {
+        if (!isControlsHidden) return;
+        setSubtitleEl(null);
+        onPlaybackRateClose();
+    }, [isControlsHidden]);
 
+    useEffect(() => {
+        setPlaybackRate(Number(localStorage.getItem('pbr')) || 1);
+    })
 
     return (
-        <div className={`absolute top-0 z-10 w-[100%] h-[100%] text-white p-2 flex flex-col justify-between ${isControlsHidden ? 'hidden' : 'visible'}`} >
-            <div className='flex items-center h-8'>
+        <div className={`absolute top-0 z-10 w-[100%] h-[100%] p-2 text-white flex flex-col justify-between ${isControlsHidden ? 'hidden' : 'visible'}`} >
+            <div className='relative flex items-center h-8 p-2'>
                 <FontAwesomeIcon
                     icon={faArrowLeft}
-                    className='cursor-pointer mr-4 h-8 w-8'
+                    className='cursor-pointer mr-4 h-8 w-8 z-10'
                     onClick={e => {
                         setIsPlayerVisible(false);
                         togglePlaying(false)
                     }}
                 />
-                <span>{title}</span>
+                <span className='z-10'>{title}</span>
+                <div className=' absolute inset-0 w-96 h-24 rounded-full filter blur-2xl bg-gray-900 transform -translate-x-28 -translate-y-8'></div>
             </div>
             <div className='flex-grow' onClick={e => togglePlaying(!playing)}></div>
             <div className='text-center flex items-center mx-auto'>
@@ -123,8 +134,8 @@ const PlayerControl = ({
                 <FontAwesomeIcon icon={faAngleDoubleRight} className='cursor-pointer h-8 w-8 fa-2x' onClick={() => seekTo(10)} />
             </div>
             <div className='flex-grow' onClick={e => togglePlaying(!playing)}></div>
-            <div className='w-[95%] flex flex-col mx-auto'>
-                <div>
+            <div className='relative w-full flex flex-col mx-auto p-2'>
+                <div className='z-10'>
                     <Slider
                         ValueLabelComponent={ValueLabelComponent}
                         value={played}
@@ -135,7 +146,7 @@ const PlayerControl = ({
                         }}
                     />
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex justify-between z-10'>
                     <div className='flex items-center'>
                         <div className='w-8'>
                             {muted
@@ -225,12 +236,26 @@ const PlayerControl = ({
                         >
                             <form className='bg-gray-900 flex flex-col text-white py-2'>
                                 <label
-                                    className='w-30 flex flex-col items-center border-black shadow-md tracking-wide p-2
+                                    className='w-30 border-black shadow-md tracking-wide p-2
                                     uppercase cursor-pointer hover:bg-gray-700'
                                 >
-                                    <FileUploadIcon />
-                                    <span className='mt-2 text-sm leading-normal'>Select a file</span>
-                                    <input type='file' accept='.SRT, .VTT' className='hidden' onChange={onSelectFile} />
+                                    {subtitle
+                                        ? (
+                                            <span onClick={() => setSubtitle(null)}>
+                                                <span className='text-sm leading-normal mr-2'>remove</span>
+                                                <FontAwesomeIcon
+                                                    icon={faTrash}
+                                                    className='cursor-pointer hover:bg-gray-700'
+                                                />
+                                            </span>
+                                        ) : (
+                                            <span className='flex flex-col items-center'>
+                                                <FileUploadIcon />
+                                                <span className='mt-2 text-sm leading-normal'>Select a file</span>
+                                                <input type='file' accept='.SRT, .VTT' className='hidden' onChange={onSelectFile} />
+                                            </span>
+                                        )
+                                    }
                                 </label>
                                 {subtitle &&
                                     <div className='mt-4 w-full flex justify-between items-center text-2xl px-2'>
@@ -272,6 +297,7 @@ const PlayerControl = ({
                                         className='hover:bg-gray-800 bg-black text-white p-2 focus:outline-none'
                                         onClick={() => {
                                             setPlaybackRate(rate);
+                                            localStorage.setItem('pbr', rate);
                                             onPlaybackRateClose();
                                         }}
                                     >
@@ -293,6 +319,7 @@ const PlayerControl = ({
                         />
                     </div>
                 </div>
+                <div className=' absolute inset-0 w-[100%] h-[100%] rounded-full filter blur-2xl bg-gray-900'></div>
             </div>
         </div>
     )
