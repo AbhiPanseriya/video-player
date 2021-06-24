@@ -5,8 +5,8 @@ const urlsToCache = [
     'manifest.json'
 ];
 const buildUrls = [
-    '/static/js/2.09461033.chunk.js',
-    '/static/js/main.de383b9f.chunk.js',
+    '/static/js/2.7c30659c.chunk.js',
+    '/static/js/main.2213bf61.chunk.js',
     '/static/css/main.26a6666b.chunk.css',
     '/static/js/runtime-main.19af7ed0.js'
 ]
@@ -15,7 +15,14 @@ self.addEventListener('install', function (event) {
         caches.open(CACHE_NAME)
             .then(function (cache) {
                 // Open a cache and cache our files
-                return cache.addAll([...urlsToCache, ...buildUrls]);
+                return cache.addAll([...urlsToCache]);
+            })
+    );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(function (cache) {
+                // Open a cache and cache our files
+                return cache.addAll([...buildUrls]);
             })
     );
 });
