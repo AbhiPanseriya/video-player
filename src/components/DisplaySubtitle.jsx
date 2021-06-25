@@ -38,7 +38,7 @@ const DisplaySubtitle = ({ played, subtitleText, isControlsHidden, subtitleOffse
     }, [played, index, subtitleText, trigger, subtitleOffset])
 
     return (
-        <div className={`absolute text-white w-full flex justify-center transition-all duration-200 ease-in-out ${isControlsHidden ? 'bottom-10' : 'bottom-20'} ${!sub && 'hidden'}`}>
+        <div className={`absolute text-white w-full flex justify-center transition-all duration-200 ease-in-out ${isControlsHidden ? 'bottom-10' : 'bottom-20'} ${!sub ? 'invisible' : ''}`}>
             <div className='bg-black rounded py-1 px-2 text-2xl'>{sub}</div>
         </div>
     )

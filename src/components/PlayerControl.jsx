@@ -109,8 +109,8 @@ const PlayerControl = ({
     })
 
     return (
-        <div className={`absolute top-0 z-10 w-[100%] h-[100%] p-2 text-white flex flex-col justify-between ${isControlsHidden ? 'hidden' : 'visible'}`} >
-            <div className='relative flex items-center h-8 p-2'>
+        <div className={`absolute top-0 z-10 w-[100%] h-[100%] p-2 text-white flex flex-col justify-between ${isControlsHidden ? 'invisible' : 'visible'}`} >
+            <div className='relative flex items-center h-8 p-2' style={{ maxWidth: 'fit-content' }}>
                 <FontAwesomeIcon
                     icon={faArrowLeft}
                     className='cursor-pointer mr-4 h-8 w-8 z-10'
@@ -120,7 +120,7 @@ const PlayerControl = ({
                     }}
                 />
                 <span className='z-10'>{title}</span>
-                <div className=' absolute inset-0 w-96 h-24 rounded-full filter blur-2xl bg-gray-900 transform -translate-x-28 -translate-y-8'></div>
+                <div className=' absolute inset-0 w-full h-full rounded-3xl filter blur-xl bg-gray-900'></div>
             </div>
             <div className='flex-grow' onClick={e => togglePlaying(!playing)}></div>
             <div className='text-center flex items-center mx-auto'>
@@ -252,7 +252,7 @@ const PlayerControl = ({
                                             <span className='flex flex-col items-center'>
                                                 <FileUploadIcon />
                                                 <span className='mt-2 text-sm leading-normal'>Select a file</span>
-                                                <input type='file' accept='.SRT, .VTT' className='hidden' onChange={onSelectFile} />
+                                                <input type='file' accept='.SRT, .VTT' className='hide' onChange={onSelectFile} />
                                             </span>
                                         )
                                     }
