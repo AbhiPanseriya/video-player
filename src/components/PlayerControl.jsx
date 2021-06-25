@@ -106,7 +106,7 @@ const PlayerControl = ({
 
     useEffect(() => {
         setPlaybackRate(Number(localStorage.getItem('pbr')) || 1);
-    })
+    }, []);
 
     return (
         <div className={`absolute top-0 z-10 w-[100%] h-[100%] p-2 text-white flex flex-col justify-between ${isControlsHidden ? 'invisible' : 'visible'}`} >

@@ -37,8 +37,8 @@ const FilesList = ({ fileNames, currentlyPlaying, setCurrentlyPlaying, isControl
                 onClick={() => setHidden(false)}
             />
             <div
-                className={`overflow-auto scrollbar-hide text-white bg-gray-900 transition-all duration-500
-                    h-full z-20 backdrop-blur-lg rounded-bl opacity-90 ${(isControlsHidden || fileNames.length <= 1 || hidden) ? 'hide' : ''}`}
+                className={`overflow-auto scrollbar-hide text-white bg-gray-900 transition-width duration-500 ease
+                    h-full z-20 backdrop-blur-lg rounded-bl opacity-90 ${(isControlsHidden || fileNames.length <= 1 || hidden) ? 'w-0' : 'w-96'}`}
                 onScroll={(e) => setScrollPosition(e.target.scrollTop)}
                 ref={ref}>
                 {
