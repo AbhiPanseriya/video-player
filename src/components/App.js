@@ -12,22 +12,22 @@ function App() {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
 
 	useEffect(() => {
-		if (currentlyPlaying === 0 && filesList.length === 0) {
+		if (currentlyPlaying === 0 && filesList.length === 0) { // base condition
 			setIsPlayerVisible(false);
-		} else if (currentlyPlaying >= filesList.length) {
+		} else if (currentlyPlaying >= filesList.length || !isPlayerVisible) { // terminating condition
 			setSrc('');
 			setTitle('');
 			setIsLocalFile(true);
 			setCurrentlyPlaying(0);
 			setFilesList([]);
-		} else {
+		} else { // prograssive condition
 			const file = filesList[currentlyPlaying];
 			setTitle(file.name);
 			const URL = window.URL || window.webkitURL;
 			setSrc(URL.createObjectURL(file));
 			setIsPlayerVisible(true);
 		}
-	}, [currentlyPlaying, filesList])
+	}, [currentlyPlaying, filesList, isPlayerVisible])
 	return (
 		<div>
 			{ isPlayerVisible
