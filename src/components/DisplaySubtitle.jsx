@@ -7,7 +7,12 @@ const DisplaySubtitle = ({ played, subtitleText, isControlsHidden, subtitleOffse
     const [sub, setSub] = useState('');
 
     useEffect(() => {
-        if (!subtitleText) return;
+        if (!subtitleText) {
+            setSub('');
+            setIndex(0);
+            setTrigger(0);
+            return;
+        }
 
         const currentDuration = 1000 * (played - subtitleOffset);
         if (currentDuration < trigger) return;
@@ -35,7 +40,7 @@ const DisplaySubtitle = ({ played, subtitleText, isControlsHidden, subtitleOffse
             });
         }
 
-    }, [played, index, subtitleText, trigger, subtitleOffset])
+    }, [played, index, subtitleText, trigger, subtitleOffset]);
 
     return (
         <div className={`absolute text-white w-full flex justify-center transition-all duration-200 ease-in-out ${isControlsHidden ? 'bottom-10' : 'bottom-20'} ${!sub ? 'invisible' : ''}`}>

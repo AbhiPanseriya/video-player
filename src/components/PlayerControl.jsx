@@ -85,13 +85,14 @@ const PlayerControl = ({
     const playbackRateId = plabackRateOptionsOpen ? 'simple-popover' : undefined;
 
     const onSelectFile = (e) => {
-        const fileReader = new FileReader()
+        const fileReader = new FileReader();
         fileReader.readAsText(e.target.files[0]);
         fileReader.onload = function (ev) {
             const result = ev.target.result;
             const file = parseSync(result);
             setSubtitle(JSON.stringify(file));
             setSubtitleEl(null);
+            setSubtitleOffset(0);
         }
     }
 
@@ -239,20 +240,24 @@ const PlayerControl = ({
                                     className='w-30 border-black shadow-md tracking-wide p-2
                                     uppercase cursor-pointer hover:bg-gray-700'
                                 >
-                                    {subtitle
+                                    {(subtitle === '')
                                         ? (
-                                            <span onClick={() => setSubtitle(null)}>
+                                            <span className='flex flex-col items-center'>
+                                                <FileUploadIcon />
+                                                <span className='mt-2 text-sm leading-normal'>Select a file</span>
+                                                <input type='file' accept='.SRT, .VTT' className='hide' onChange={onSelectFile} />
+                                            </span>
+                                        ) : (
+                                            <span onClick={() => {
+                                                setSubtitle('');
+                                                setSubtitleOffset(0);
+                                            }}
+                                            >
                                                 <span className='text-sm leading-normal mr-2'>remove</span>
                                                 <FontAwesomeIcon
                                                     icon={faTrash}
                                                     className='cursor-pointer hover:bg-gray-700'
                                                 />
-                                            </span>
-                                        ) : (
-                                            <span className='flex flex-col items-center'>
-                                                <FileUploadIcon />
-                                                <span className='mt-2 text-sm leading-normal'>Select a file</span>
-                                                <input type='file' accept='.SRT, .VTT' className='hide' onChange={onSelectFile} />
                                             </span>
                                         )
                                     }

@@ -12,8 +12,14 @@ function App() {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
 
 	useEffect(() => {
-		if (currentlyPlaying >= filesList.length) {
+		if (currentlyPlaying === 0 && filesList.length === 0) {
 			setIsPlayerVisible(false);
+		} else if (currentlyPlaying >= filesList.length) {
+			setSrc('');
+			setTitle('');
+			setIsLocalFile(true);
+			setCurrentlyPlaying(0);
+			setFilesList([]);
 		} else {
 			const file = filesList[currentlyPlaying];
 			setTitle(file.name);

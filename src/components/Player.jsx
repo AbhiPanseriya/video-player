@@ -46,6 +46,7 @@ const Player = ({ src, title, isLocalFile, currentlyPlaying, setCurrentlyPlaying
     useEffect(() => {
         togglePlaying(true);
         handleMouseMove();
+        setSubtitle('');
     }, [src]);
 
     useEffect(() => {
@@ -125,7 +126,10 @@ const Player = ({ src, title, isLocalFile, currentlyPlaying, setCurrentlyPlaying
 
     return (
         <FullScreen handle={fullScreenHandle}>
-            <div className={`relative bg-black ${isControlsHidden ? 'cursor-none' : 'cursor-auto'}`} onMouseMove={handleMouseMove}>
+            <div
+                className={`relative bg-black overflow-auto scrollbar-hide ${isControlsHidden ? 'cursor-none' : 'cursor-auto'}`}
+                onMouseMove={handleMouseMove}
+            >
                 <div className={`w-screen h-screen ${isControlsHidden ? '' : 'opacity-75'}`}>
                     <ReactPlayer
                         ref={playerRef}

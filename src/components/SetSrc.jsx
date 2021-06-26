@@ -1,5 +1,5 @@
 import FileUploadIcon from "./file-upload-svg-icon";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,6 +7,7 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, set
     const [dark, setDark] = useState(JSON.parse(localStorage.getItem('dark')) || false);
 
     const onSelectFile = (e) => {
+        setIsLocalFile(true);
         if (e.target.files.length > 1) setIsMultiple(true);
         setFilesList(e.target.files);
         const file = e.target.files[0];
@@ -21,13 +22,6 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, set
         setIsLocalFile(false);
         setIsPlayerVisible(true);
     }
-
-    useEffect(() => {
-        setSrc('');
-        setTitle('');
-        setIsLocalFile(true);
-
-    }, [setSrc, setTitle, setIsLocalFile])
 
     const toggledarkMode = (value) => {
         setDark(value);
