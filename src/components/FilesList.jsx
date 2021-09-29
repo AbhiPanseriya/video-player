@@ -45,7 +45,7 @@ const FilesList = ({ fileNames, currentlyPlaying, setCurrentlyPlaying, isControl
                     fileNames.map((name, index) => {
                         return (
                             <div
-                                key={name}
+                                key={name || 'link'}
                                 className={`px-2 py-1 cursor-pointer w-96 z-30
                                     ${currentlyPlaying === index ? 'font-extrabold text-md bg-gray-800' : 'text-sm'}`}
                                 onClick={() => setCurrentlyPlaying(index)}

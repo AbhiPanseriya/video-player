@@ -12,6 +12,7 @@ function App() {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState(0);
 
 	useEffect(() => {
+		if (!isLocalFile) return
 		if (currentlyPlaying === 0 && filesList.length === 0) { // base condition
 			setIsPlayerVisible(false);
 		} else if (currentlyPlaying >= filesList.length || !isPlayerVisible) { // terminating condition

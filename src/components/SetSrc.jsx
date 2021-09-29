@@ -5,6 +5,7 @@ import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, setIsMultiple, setFilesList }) => {
     const [dark, setDark] = useState(JSON.parse(localStorage.getItem('dark')) || false);
+    const [link, setLink] = useState('');
 
     const onSelectFile = (e) => {
         setIsLocalFile(true);
@@ -19,6 +20,9 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, set
 
     const onSelectLink = (e) => {
         e.preventDefault();
+        setSrc(link);
+        setFilesList([src]);
+        setIsMultiple(false);
         setIsLocalFile(false);
         setIsPlayerVisible(true);
     }
@@ -69,8 +73,8 @@ const SetSrc = ({ src, setSrc, setIsPlayerVisible, setTitle, setIsLocalFile, set
                         className='outline-none shadow-md p-3 w-full border rounded-lg dark:bg-gray-700 dark:border-black dark:text-white 
                         transition-all duration-500'
                         placeholder='Paste your Link Here'
-                        onChange={(e) => setSrc(e.target.value)}
-                        value={src}
+                        onChange={(e) => setLink(e.target.value)}
+                        value={link}
                     />
                 </form>
             </div>
